@@ -1,0 +1,95 @@
+unit untPrincipal;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, ExtDlgs;
+
+type
+  TfrmPrincipal = class(TForm)
+    sbtnSelecionarArquivo: TSpeedButton;
+    edtCaminhoArquivo: TEdit;
+    memoCodigosNaoValidos: TMemo;
+    sbtnValidar: TSpeedButton;
+    openFileDialog: TOpenTextFileDialog;
+    procedure FormCreate(Sender: TObject);
+    function ValidarEAN(CodigoEan: String):boolean;
+    procedure sbtnValidarClick(Sender: TObject);
+  private
+    listEAN: TStringList;
+    {Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmPrincipal: TfrmPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmPrincipal.FormCreate(Sender: TObject);
+begin
+  memoCodigosNaoValidos.Clear;
+  edtCaminhoArquivo.Clear;
+  listEAN:= nil;
+end;
+
+procedure TfrmPrincipal.sbtnValidarClick(Sender: TObject);
+var
+  codEnviado: string;
+begin
+  codEnviado:= edtCaminhoArquivo.Text;
+  if ValidarEAN(codEnviado) then
+  begin
+     ShowMessage('O Código é valido');
+  end
+  else
+  begin
+     ShowMessage('O Código não é valido');
+  end;
+
+end;
+
+function TfrmPrincipal.ValidarEAN(CodigoEan: String):boolean;
+var
+  DV, somaImparPar, somaPar, somaImpar,condigoEANInteger, i, DVCalc: integer;
+
+begin
+    somaPar:= 0;
+    somaImpar:= 0;
+    somaImparPar:= 0;
+    DVCalc:= 0;
+
+    DV:=StrToInt(CodigoEan[13]);
+    for i := 1 to 12 do
+    begin
+      condigoEANInteger:= StrToInt(CodigoEan[i]);
+      if i mod 2 = 1 then
+        somaImpar:= somaImpar+ condigoEANInteger;
+      if i mod 2 = 0 then
+        somaPar:= somaPar + condigoEANInteger;
+    end;
+
+    somaImpar:= somaImpar * 3;
+    somaImparPar:= somaImpar + somaPar;
+
+    for i := 0 to 9 do
+    begin
+       if (somaImparPar + i) div 10 = 0 then
+         DVCalc := i;
+    end;
+
+    if DVCalc = dv then
+    begin
+      Result:= true;
+    end
+    else
+    begin
+      Result:= false;
+    end;
+end;
+
+end.

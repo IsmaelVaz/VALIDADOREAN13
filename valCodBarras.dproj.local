@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/07/24 11:40:15.660.pas,C:\Users\p2s\Documents\RAD Studio\Projects\Unit1.pas=C:\Users\p2s\Documents\RAD Studio\Projects\CodigoBarras\untPrincipal.pas</Transaction>
+    <Transaction>2018/07/24 11:40:15.660.dfm,C:\Users\p2s\Documents\RAD Studio\Projects\Unit1.dfm=C:\Users\p2s\Documents\RAD Studio\Projects\CodigoBarras\untPrincipal.dfm</Transaction>
+    <Transaction>2018/07/24 13:35:19.061.dproj,C:\Users\p2s\Documents\RAD Studio\Projects\Project1.dproj=C:\Users\p2s\Documents\RAD Studio\Projects\CodigoBarras\valCodBarras.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
