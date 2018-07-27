@@ -15,10 +15,9 @@ type
     FileOpenDialog1: TFileOpenDialog;
     sbtnDuvida: TSpeedButton;
     Label1: TLabel;
-
+    procedure FormCreate(Sender: TObject);
     function ValidarEAN(CodigoEan: String):boolean;
     function ValidarChar(palavra: String):boolean;
-    procedure FormCreate(Sender: TObject);
     procedure sbtnValidarClick(Sender: TObject);
     procedure sbtnSelecionarArquivoClick(Sender: TObject);
     procedure addItemArqNaList;
@@ -42,6 +41,7 @@ procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
   memoCodigosNaoValidos.Clear;
   edtCaminhoArquivo.Clear;
+  listEAN:= nil;
 end;
 
 procedure TfrmPrincipal.sbtnDuvidaClick(Sender: TObject);
@@ -51,23 +51,13 @@ end;
 
 procedure TfrmPrincipal.sbtnSelecionarArquivoClick(Sender: TObject);
 begin
-  //Abre a tela para selecionar o aqruivo TXT
-
   FileOpenDialog1.Title := 'Selecionar TXT';
 
-  //Se for selecionado algum arquivo, entrará no if
   if FileOpenDialog1.Execute then
   begin
-    // Coloca o caminho EDIT
      edtCaminhoArquivo.Text:= FileOpenDialog1.FileName;
-
-     //Associa a variavel ARQ ao Arquivo selecionado
      AssignFile(arq, FileOpenDialog1.FileName);
-
-     //Tenta abrir o arquivo, se ele existir, entrará no IF
-     //Assim fechamos o arquivo e disponivilizamos ele para futura manipulação
      Reset(arq);
-
      if (IOResult = 0) then
      begin
         CloseFile(arq);
@@ -85,41 +75,23 @@ begin
 
   if edtCaminhoArquivo.Text <> '' then
   begin
-   { Se no EDIT tiver o :\, sabemos que é um caminho
-     Se não tiver, ele sabe que não foi selecionado
-    um arquivo e provavelmente foi colocado um código unitario  }
-
     if ContainsText(edtCaminhoArquivo.Text, ':\') then
     begin
-      //Adiciona todas as linhas do arquivo em uma lista para fazer a manipulação
       addItemArqNaList;
-
-      //Caminha por todos os itens da lista
       for i := 0 to listEAN.Count - 1 do
       begin
-        {Se o código de alguma linha não for valido, ele adicionará no MEMO
-        com a posição que está no arquivo e qual o código }
-
-        if ValidarChar(listEAN[i]) then
+        if not ValidarEAN(listEAN[i]) then
         begin
-           if not ValidarEAN(listEAN[i]) then
-            begin
-              memoCodigosNaoValidos.Lines.Add('Pos: '+ IntToStr(i+1) + ' - Cod: '+ listEAN[i]);
-            end
+          memoCodigosNaoValidos.Lines.Add('Pos: '+ IntToStr(i+1) + ' - Cod: '+ listEAN[i]);
         end
-        else
-           memoCodigosNaoValidos.Lines.Add('Pos: '+ IntToStr(i+1) + ' - Cod: '+ listEAN[i]);
       end;
     end
     else
     begin
-       //Verifica se o que foi digitado possui 13 digitos
        if Length(edtCaminhoArquivo.Text) = 13 then
        begin
-           //Valida para verificar se só foi digitado números
            if ValidarChar(edtCaminhoArquivo.Text) then
            begin
-              //Valida o código de barras digitado
               if ValidarEAN(edtCaminhoArquivo.Text) then
               begin
                 ShowMessage('O Código EAN: ' + edtCaminhoArquivo.Text + ' é válido!');
@@ -199,14 +171,11 @@ var
   i: integer;
   itemArquivo: String;
 begin
-  listEAN:= TStringList.Create; // Instancia a Lista
+  listEAN:= TStringList.Create;
   Reset(arq); { abre o arquivo texto para leitura }
 
-  //Enquanto o arquivo não chegar o final, ele continua o laço
   while (not eof(arq)) do
   begin
-
-    // Le a linha, adiciona na var itemArquivo e logo depois na lista
     Readln(arq, itemArquivo);
     listEAN.Add(itemArquivo);
   end;
@@ -219,10 +188,6 @@ var
   i, count: integer;
 begin
   count:= 0;
-   { Existe um contato que irá somar mais 1 toda vez que um caracter for valido
-    no final, se não tiver 13 caracteres validos, se entende que não é um código válido.
-    Futuramente o numeor 13 poderá ser alterado por uma váriavel,
-    dessa forma podemos validar não só com 13 digitos.}
 
    for i := 1 to 13 do
    begin

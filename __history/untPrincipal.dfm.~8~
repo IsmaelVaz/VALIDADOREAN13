@@ -67,11 +67,7 @@ object frmPrincipal: TfrmPrincipal
   end
   object FileOpenDialog1: TFileOpenDialog
     FavoriteLinks = <>
-    FileTypes = <
-      item
-        DisplayName = 'Arquivo de Texto'
-        FileMask = '*.txt'
-      end>
+    FileTypes = <>
     Options = []
     Left = 232
     Top = 56
