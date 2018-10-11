@@ -63,7 +63,6 @@ object frmPrincipal: TfrmPrincipal
     Lines.Strings = (
       'memoCodigosNaoValidos')
     ReadOnly = True
-    ScrollBars = ssVertical
     TabOrder = 1
   end
   object FileOpenDialog1: TFileOpenDialog
